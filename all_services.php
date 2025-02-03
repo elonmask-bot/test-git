@@ -12,7 +12,7 @@ $activities = getAllServices($conn, 'activities');
 $packages = getAllServices($conn, 'packages');
 
 ?>
-
+aa
 <!DOCTYPE html>
 <html lang="ar">
 <head>
