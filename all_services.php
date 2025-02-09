@@ -3,6 +3,57 @@
 include 'db_connect.php';
 
 // دالة لجلب جميع الخدمات (فنادق، مطاعم، سيارات، أنشطة) من جميع المربعات السكنية
+function getAllServices($conn, $serviceType)
+{
+    $table = '';
+    $priceField = '';
+    $nameField = '';
+    $mainImageField = '';
+    switch ($serviceType) {
+        case 'hotels':
+            $table = 'Hotels';
+            $priceField = 'RoomPrice';
+            $nameField = 'h.Name';
+            $mainImageField = 'MainImageURL';
+            break;
+        case 'restaurants':
+            $table = 'Restaurants';
+            $priceField = 'BookingPrice';
+            $nameField = 'r.Name';
+            $mainImageField = 'MainImageURL';
+            break;
+        case 'cars':
+            $table = 'Cars';
+            $priceField = 'RentalPerDay';
+            $nameField = 'c.Name';
+            $mainImageField = 'MainImageURL';
+            break;
+        case 'activities':
+            $table = 'EntertainmentPlaces';
+            $priceField = 'TicketPrice';
+            $nameField = 'a.Name';
+            $mainImageField = 'MainImageURL';
+            break;
+         case 'packages':
+              return [];
+        default:
+            return [];
+    }
+    if ($serviceType == 'packages') {
+         return [];
+    } else {
+        $sql = "SELECT *, {$priceField} as price, s.Name as SquareName, s.SquareID as SquareID, {$nameField} as service_name, {$mainImageField} as ImageUrl FROM {$table} as {$serviceType[0]}
+                JOIN ResidentialSquares s ON {$serviceType[0]}.SquareID = s.SquareID";
+        $result = $conn->query($sql);
+        $services = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $services[] = $row;
+            }
+        }
+        return $services;
+    }
+}
 
 // جلب جميع الخدمات
 $hotels = getAllServices($conn, 'hotels');
@@ -12,9 +63,6 @@ $activities = getAllServices($conn, 'activities');
 $packages = getAllServices($conn, 'packages');
 
 ?>
-aa
-bb
-cc
 
 <!DOCTYPE html>
 <html lang="ar">
